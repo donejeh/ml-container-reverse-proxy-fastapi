@@ -57,12 +57,4 @@ services:
     container_name: srt_translate_container
     expose:
       - "10202"
-
-  # video_srt_convert:
-  #   build: 
-  #     context: ./model_query
-  #   container_name: video_srt_convert
-  #   expose:
-  #     - "8001"
-
   
