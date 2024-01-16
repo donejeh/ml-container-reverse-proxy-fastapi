@@ -1,0 +1,63 @@
+version: '3'
+services:
+  model_translate:
+    container_name: model_translate
+    build:
+      context: ./model_translate
+    ports:
+      - "10203:80"
+    volumes:
+      - ./model_translate:/app
+    environment:
+      - MODEL_NAME=translate
+
+  model_query:
+    container_name: model_query
+    build:
+      context: ./model_query
+    ports:
+      - "10206:80"
+    volumes:
+      - ./model_query:/app
+    environment:
+      - MODEL_NAME=query
+
+  model_translate_srt:
+    container_name: model_translate_srt
+    build:
+      context: ./model_translate_srt
+    ports:
+      - "10202:80"
+    volumes:
+      - ./model_translate_srt:/app
+    environment:
+      - MODEL_NAME=translate_srt
+
+  model_transcribe:
+    container_name: model_transcribe
+    build:
+      context: ./model_transcribe
+    ports:
+      - "50051:80"
+    volumes:
+      - ./model_transcribe:/app
+    environment:
+      - MODEL_NAME=transcribe
+
+  nginx:
+    image: danieldent/nginx-ssl-proxy
+    restart: always
+    environment:
+      UPSTREAM: model_translate:10203
+      SERVERNAME: test.example.com # change this to your domain
+      EXTRANAMES: www.test.example.com # remove this line if you don't have any additional names
+    ports:
+      - "80:80"
+      - "443:443" 
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - model_translate
+      - model_query
+      - model_translate_srt
+      - model_transcribe

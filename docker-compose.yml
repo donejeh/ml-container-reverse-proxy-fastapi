@@ -1,0 +1,68 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_container
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - digital-literacy
+      - knowledge-assistance
+      - multilang-translate
+      - omiefe-ai
+      - srtaudio
+      - srt-translate
+
+  digital-literacy:
+    build:
+      context: ./model_translate
+    container_name: digital_lit_container
+    expose:
+      - "10206"
+
+  knowledge-assistance:
+    build:
+      context: ./model_translate_srt
+    container_name: knowledge_assist_container
+    expose:
+      - "10207"
+
+  multilang-translate:
+    build:
+      context: ./model_query
+    container_name: multilang_translate_container
+    expose:
+      - "10203"
+
+  omiefe-ai:
+    build:
+      context: ./model_query
+    container_name: omiefe_ai_container
+    expose:
+      - "10208"
+
+  srtaudio:
+    build:
+      context: ./model_transcribe
+    container_name: srtaudio_container
+    expose:
+      - "10300"
+
+  srt-translate:
+    build:
+      context: ./model_translate_srt
+    container_name: srt_translate_container
+    expose:
+      - "10202"
+
+  # video_srt_convert:
+  #   build: 
+  #     context: ./model_query
+  #   container_name: video_srt_convert
+  #   expose:
+  #     - "8001"
+
+  
